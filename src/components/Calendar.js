@@ -1,62 +1,41 @@
 import React, { Component } from "react";
-import moment from "moment";
+import {selectDay, nextMonth, previousMonth } from "../actions/calendarActions";
 
 
 export default class Calendar extends Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            month: moment(),
-            selected: moment().startOf('day'),
-            selectedWeek: moment().week()
-        };
-
         this.previous = this.previous.bind(this);
         this.next = this.next.bind(this);
     }
 
     previous() {
-        const {
-            month,
-        } = this.state;
-
-        this.setState({
-            month: month.subtract(1, 'month'),
-        });
+        const {dispatch, month} = this.props;
+        dispatch(previousMonth(month));
     }
 
     next() {
-        const {
-            month,
-        } = this.state;
-
-        this.setState({
-            month: month.add(1, 'month'),
-        });
+        const {dispatch, month} = this.props;
+        dispatch(nextMonth(month));
     }
 
     select(day) {
-        console.log(day);
-        this.setState({
-            selected: day.date,
-            month: day.date.clone(),
-            selectedWeek: moment(day.date).week()
-        });
+        const {dispatch } = this.props;
+        dispatch(selectDay(day));
     }
 
     renderWeeks() {
         let weeks = [];
         let done = false;
-        let date = this.state.month.clone().startOf("month").add("w").day("Sunday");
+        let date = this.props.month.clone().startOf("month").add("w").day("Sunday");
         let count = 0;
         let monthIndex = date.month();
 
 
         const {
-            selected,
+            selectedDay,
             month,
-        } = this.state;
+        } = this.props;
 
         while (!done) {
             weeks.push(
@@ -64,12 +43,11 @@ export default class Calendar extends Component {
                       date={date.clone()}
                       month={month}
                       select={(day) => this.select(day)}
-                      selected={selected}/>
+                      selected={selectedDay}/>
             );
 
             date.add(1, "w");
             done = count++ > 2 && monthIndex !== date.month();
-            console.log(done, count, monthIndex, date.month());
             monthIndex = date.month();
         }
 
@@ -79,13 +57,12 @@ export default class Calendar extends Component {
     renderMonthLabel() {
         const {
             month,
-        } = this.state;
+        } = this.props;
 
         return <span className="month-label">{month.format("MMMM YYYY")}</span>;
     }
 
     render() {
-        console.log(this.state.selectedWeek);
         return (
             <section className="calendar">
                 <header className="header">
