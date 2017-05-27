@@ -1,10 +1,8 @@
-import moment from "moment";
 import * as types from "../constants/ActionTypes";
 const initialState = {
-    month: moment(),
+    month: new Date(),
     selectedDay: null,
     selectedWeek: null,
-    selectedMonth: null,
 };
 
 export default function calendar(state = initialState, action) {
@@ -16,11 +14,11 @@ export default function calendar(state = initialState, action) {
         case types.PREVIOUS_MONTH:
             return Object.assign({}, state, { month: action.month });
         case types.SELECT_DAY:
-            return Object.assign({}, state, { selectedDay: action.selected });
-        case types.SELECT_WEEK:
-            return Object.assign({}, state, { selectedWeek: action.selectedWeek });
-        case types.SELECT_MONTH:
-            return Object.assign({}, state, { month: action.month });
+            return Object.assign({}, state, {
+                selectedDay: action.selected,
+                month: action.selected,
+                selectedWeek: action.selectedWeek
+            });
         default:
             return state;
     }

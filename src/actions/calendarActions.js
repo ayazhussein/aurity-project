@@ -7,45 +7,44 @@ export function initCalendar() {
     }
 }
 
-export function nextMonth(month) {
+export function nextMonth(date) {
+    let month;
+    if(date.getMonth() === 11) {
+         month= new Date(date.getFullYear() + 1, 0);
+    } else {
+        month = new Date(date.getFullYear(), date.getMonth() + 1);
+    }
     return {
         type: types.NEXT_MONTH,
-        month: month.add(1, "month"),
+        month,
     }
 }
 
-export function previousMonth(month) {
+export function previousMonth(date) {
+    let month;
+    if(date.getMonth() === 0) {
+        month= new Date(date.getFullYear() - 1, 11);
+    } else {
+        month = new Date(date.getFullYear(), date.getMonth() - 1);
+    }
     return {
         type: types.PREVIOUS_MONTH,
-        month: month.subtract(1, "month")
+        month
     }
 }
 
-export function selectedDay(day) {
+export function selectedDay(day, week) {
     return {
         type: types.SELECT_DAY,
         selected: day,
-    }
-}
-
-export function selectedWeek(week) {
-    return {
-        type: types.SELECT_WEEK,
         selectedWeek: week
     }
 }
-export function selectedMonth(date) {
-    return {
-        type: types.SELECT_MONTH,
-        month: date,
-    }
-}
+
 
 export function selectDay(day) {
     return dispatch => {
         const week = moment(day.date).week();
-        dispatch(selectedWeek(week));
-        dispatch(selectedDay(day.date));
-        dispatch(selectedMonth(day.date.clone()));
+        dispatch(selectedDay(day.date, week));
     }
 }
