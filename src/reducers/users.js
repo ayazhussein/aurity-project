@@ -1,4 +1,5 @@
 import * as types from "../constants/ActionTypes";
+import * as _ from "lodash";
 const initialState = {
     users: [],
     loading: false,
@@ -21,12 +22,26 @@ export default function Users(state = initialState, action) {
         case types.SELECT_USER_TO_APPROVE:
             return Object.assign({}, state, { selectedUser: action.payload });
         case types.FETCH_USER_TIMESHEET:
-            return Object.assign({}, state, { loading: true});
+            return Object.assign({}, state, { loading: true });
         case types.FETCH_USER_TIMESHEET_SUCCESS: {
-            return Object.assign({}, state, { loading: false, timesheet: action.payload} );
+            return Object.assign({}, state, { loading: false, timesheet: action.payload });
         }
         case types.FETCH_USER_TIMESHEET_FAIL: {
-            return Object.assign({}, state, { loading: false, error: action.payload});
+            return Object.assign({}, state, { loading: false, error: action.payload });
+        }
+        case types.UPDATE_TIMESHEET_AFTER_ACTION: {
+
+            return Object.assign({}, state, {
+                timesheet: {
+                    ...state.timesheet,
+                    weeks: state.timesheet.weeks.map((function (week) {
+                        if (week.week_id === action.payload.week_id) {
+                            return action.payload;
+                        }
+                        return week;
+                    })),
+                }
+            });
         }
         default:
             return state;

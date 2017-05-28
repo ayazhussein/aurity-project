@@ -1,6 +1,7 @@
 import * as types from "../constants/ActionTypes";
 import axios from 'axios';
 import * as constants from "../constants/constants";
+import { generateApproveUrl } from "../constants/constants";
 
 
 function fetchUsers() {
@@ -89,6 +90,28 @@ export function fetchMonthByUserId(userId) {
             console.log(error);
             dispatch(getTimeSheetFail(error));
         })
+    }
+}
+
+function updateTimeSheetAfterAction(week) {
+    return {
+        type: types.UPDATE_TIMESHEET_AFTER_ACTION,
+        payload: week,
+    };
+}
+
+export function approveOrRejectWeek(weekId, userId, status) {
+    return (dispatch) => {
+        console.log(weekId, userId);
+
+        axios.put(generateApproveUrl(weekId, userId), {
+            status
+        }).then( res => {
+            console.log(res);
+            dispatch(updateTimeSheetAfterAction(res.data));
+        }).catch(error => {
+            console.log(error);
+        });
     }
 }
 
