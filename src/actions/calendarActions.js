@@ -37,6 +37,7 @@ export function selectedDay(day, week) {
     return {
         type: types.SELECT_DAY,
         selected: day,
+        selectedDay: day.date,
         selectedWeek: week
     }
 }
@@ -45,6 +46,7 @@ export function selectedDay(day, week) {
 export function selectDay(day) {
     return dispatch => {
         const week = moment(day.date).week();
-        dispatch(selectedDay(day.date, week));
+        dispatch(selectedDay(day, week));
     }
 }
+

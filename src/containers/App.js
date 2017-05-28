@@ -1,13 +1,15 @@
 import React, { Component } from "react";
-import User from "../components/User";
+import UsersContainer from "./UsersContainer";
 import CalendarContainer from "./CalendarContainer";
+import CTAContainer from "./CTAContainer";
 
 class App extends Component {
     render() {
         return (
-            <div>
-                <User />
+            <div className="wrapper">
+                <UsersContainer />
                 <CalendarContainer />
+                <CTAContainer />
             </div>
         )
     }

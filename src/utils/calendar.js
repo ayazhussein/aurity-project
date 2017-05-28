@@ -1,3 +1,4 @@
+import moment from "moment";
 const DAYS_IN_WEEK = 7;
 
 function getFirstDayInMonth(date) {
@@ -24,24 +25,28 @@ function getDays(date) {
     return days
 }
 
-export default function getWeeks(date, firstDayOfWeek = 0, forceSixRows = false) {
+export default function getWeeks(date, firstDayOfWeek = 1, forceSixRows = false) {
     let days = getDays(date);
     let daysInMonth = days.length;
     let week = [];
     let weeks = [];
     days.forEach(day => {
+        // debugger;
         if (week.length > 0 && day.getDay() === firstDayOfWeek) {
-            weeks.push(week);
+            weeks.push({week, weekNumber: moment(week[firstDayOfWeek]).week()});
+            // weeks.push(week);
             week = [];
         }
 
         week.push(day);
 
         if (days.indexOf(day) === days.length - 1) {
-            weeks.push(week)
+            // weeks.push({week: week, weekNumber: moment(day).week()})
+            weeks.push({week, weekNumber: moment(week[firstDayOfWeek]).week()});
         }
     });
-    const firstWeek = weeks[0];
+    const firstWeekObj = weeks[0];
+    const firstWeek = firstWeekObj.week;
 
     for (let i = DAYS_IN_WEEK - firstWeek.length; i > 0; i--) {
         const outsideDate = new Date(firstWeek[0]);
@@ -49,7 +54,8 @@ export default function getWeeks(date, firstDayOfWeek = 0, forceSixRows = false)
         firstWeek.unshift(outsideDate);
         daysInMonth++
     }
-    const lastWeek = weeks[weeks.length - 1];
+    const lastWeekObj = weeks[weeks.length - 1];
+    const lastWeek = lastWeekObj.week;
 
     for (let i = lastWeek.length; i < DAYS_IN_WEEK; i++) {
         const outsideDate = new Date(lastWeek[lastWeek.length - 1]);

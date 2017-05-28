@@ -2,68 +2,66 @@ import React, { Component } from "react";
 import { selectDay, nextMonth, previousMonth } from "../actions/calendarActions";
 import moment from "moment";
 import getWeeks from "../utils/calendar";
+import { fetchMonthByUserId } from "../actions/usersActions";
+import DayNames from "./DayNames";
+import Week from "./Week";
 
 export default class Calendar extends Component {
 
     constructor(props) {
         super(props);
-        // this.state = {
-        //     month: new Date(),
-        //     selectedDay: new Date(),
-        // };
 
         this.previous = this.previous.bind(this);
         this.next = this.next.bind(this);
-        // console.log(this.getWeeks(this.state.month));
     }
 
     previous() {
-        const {dispatch, month} = this.props;
+        const { dispatch, month, selectedUser } = this.props;
         dispatch(previousMonth(month));
-        // const { month } = this.state;
-        // if (month.getMonth() === 0) {
-        //     this.setState({
-        //         month: new Date(month.getFullYear() - 1, 11),
-        //     })
-        // } else {
-        //     this.setState({
-        //         month: new Date(month.getFullYear(), month.getMonth() - 1),
-        //     });
-        // }
+        if (selectedUser !== "") {
+            dispatch(fetchMonthByUserId(selectedUser))
+        }
     }
 
     next() {
-        const {dispatch, month} = this.props;
+        const { dispatch, month, selectedUser } = this.props;
         dispatch(nextMonth(month));
-        // const { month } = this.state;
-        // if (month.getMonth() === 11) {
-        //     this.setState({
-        //         month: new Date(month.getFullYear() + 1, 0),
-        //     })
-        // } else {
-        //     this.setState({
-        //         month: new Date(month.getFullYear(), month.getMonth() + 1),
-        //     });
-        // }
+        if (selectedUser !== "") {
+            dispatch(fetchMonthByUserId(selectedUser))
+        }
     }
 
     select(day) {
         const { dispatch } = this.props;
         dispatch(selectDay(day));
-        // this.setState({
-        //     selectedDay: day.date,
-        //     month: day.date,
-        // })
     }
-
 
 
     renderWeeks() {
         const {
             selectedDay,
             month,
+            timesheet
         } = this.props;
+        let workWeek;
         let weeks = getWeeks(month);
+        if (timesheet && timesheet.weeks) {
+            workWeek = timesheet.weeks.sort(function (a, b) {
+                return a.week_number - b.week_number
+            });
+            console.log(workWeek);
+        }
+
+        if (workWeek && weeks) {
+            for (let i = 0; i < weeks.length; i++) {
+                for (let j = 0; j < workWeek.length; j++) {
+                    if (weeks[i].weekNumber === workWeek[j].week_number) {
+                        weeks[i] = Object.assign({}, weeks[i], workWeek[j]);
+                    }
+                }
+            }
+        }
+        console.log(weeks);
         return weeks.map((week, i) => {
             return (<Week key={i}
                           week={week}
@@ -100,81 +98,6 @@ export default class Calendar extends Component {
     }
 }
 
-class DayNames extends Component {
-    render() {
-        return (
-            <div className="row day-names">
-                <span className="day">Sun</span>
-                <span className="day">Mon</span>
-                <span className="day">Tue</span>
-                <span className="day">Wed</span>
-                <span className="day">Thu</span>
-                <span className="day">Fri</span>
-                <span className="day">Sat</span>
-            </div>
-        );
-    }
-}
 
-class Week extends Component {
-    render() {
-        let days = [];
-        let {
-            week,
-        } = this.props;
 
-        const {
-            month,
-            selected,
-            select,
-        } = this.props;
 
-        for (let i = 0; i < 7; i++) {
-            let day = {
-                name: moment(week[i]).format("dd").substring(0, 1),
-                number: week[i].getDate(),
-                isCurrentMonth: week[i].getMonth() === month.getMonth(),
-                isToday: moment(week[i]).isSame(new Date(), "day"),
-                date: week[i],
-            };
-            days.push(
-                <Day day={day}
-                     selected={selected}
-                     select={select}
-                     key={day.date}/>
-            );
-
-            week[i] = new Date(week[i]);
-        }
-
-        return (
-            <div className="row week" key={days[0]}>
-                {days}
-            </div>
-        );
-    }
-
-}
-
-class Day extends Component {
-    render() {
-        const {
-            day,
-            day: {
-                date,
-                isCurrentMonth,
-                isToday,
-                number
-            },
-            select,
-            selected
-        } = this.props;
-
-        return (
-            <span
-                key={date.toString()}
-                className={"day" + (isToday ? " today" : "") + (isCurrentMonth ? "" : " different-month") + (moment(date).isSame(selected) ? " selected" : "")}
-                onClick={() => select(day)}>{number}</span>
-        );
-    }
-}

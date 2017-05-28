@@ -13,13 +13,15 @@ class CalendarContainer extends Component {
 }
 
 function mapStateToProps(state) {
-    const { calendar } = state;
-    const { month, selectedDay, selectedWeek } = calendar;
-    // console.log(month);
+
+    const { month, selectedDay, selectedWeek } = state.calendar;
+    const { timesheet, selectedUser } = state.users;
     return {
         month,
         selectedDay,
-        selectedWeek
+        selectedWeek,
+        timesheet,
+        selectedUser
     }
 }
 

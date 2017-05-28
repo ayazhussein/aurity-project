@@ -3,6 +3,7 @@ const initialState = {
     month: new Date(),
     selectedDay: null,
     selectedWeek: null,
+    selected: null,
 };
 
 export default function calendar(state = initialState, action) {
@@ -15,10 +16,13 @@ export default function calendar(state = initialState, action) {
             return Object.assign({}, state, { month: action.month });
         case types.SELECT_DAY:
             return Object.assign({}, state, {
-                selectedDay: action.selected,
-                month: action.selected,
+                selectedDay: action.selectedDay,
+                selected: action.selected,
+                month: action.selectedDay,
                 selectedWeek: action.selectedWeek
             });
+
+
         default:
             return state;
     }

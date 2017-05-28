@@ -1,10 +1,9 @@
 import { combineReducers } from 'redux';
 import calendar from "./calendar";
+import users from "./users";
 
 const rootReducer = combineReducers({
-    user: function (state = {}, action) {
-        return state;
-    },
+    users,
     calendar
 });
 
