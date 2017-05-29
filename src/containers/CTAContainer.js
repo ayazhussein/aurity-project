@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Button from "../components/Button";
+import { PropTypes} from "prop-types";
 import { connect } from "react-redux";
 import notify from "../utils/notify";
 import { approveOrRejectWeek } from "../actions/usersActions";

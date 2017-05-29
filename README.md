@@ -1,3 +1,11 @@
+## ReadMe:
+
+This demo project is hosted by github pages: [DEMO](https://ayazhussein.github.io/aurity-project);
+
+
+
+## Create-React-App Readme Boilerplate:
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>

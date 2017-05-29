@@ -1,5 +1,4 @@
 import * as types from "../constants/ActionTypes";
-import * as _ from "lodash";
 const initialState = {
     users: [],
     loading: false,
