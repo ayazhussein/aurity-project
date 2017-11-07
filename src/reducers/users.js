@@ -6,6 +6,7 @@ const initialState = {
     loggedUser: "",
     selectedUser: "",
     timesheet: {},
+    allowed: false,
 };
 
 export default function Users(state = initialState, action) {

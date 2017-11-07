@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Button from "../components/Button";
-import { PropTypes} from "prop-types";
+import { PropTypes } from "prop-types";
 import { connect } from "react-redux";
 import notify from "../utils/notify";
 import { approveOrRejectWeek } from "../actions/usersActions";
+
 
 
 class CTAContainer extends Component {
@@ -13,6 +14,8 @@ class CTAContainer extends Component {
         this.approveWeek = this.approveWeek.bind(this);
         this.rejectWeek = this.rejectWeek.bind(this);
     }
+
+
 
     rejectWeek() {
         const { dispatch, selectedUser, selected, loggedUser } = this.props;
@@ -26,8 +29,8 @@ class CTAContainer extends Component {
     }
 
     approveWeek(e) {
-        const { dispatch, selectedUser, selected, loggedUser } = this.props;
-        if (loggedUser !== "" && selected.approvers && selected.approvers.length > 0 && selected.approvers.indexOf(parseInt(loggedUser)) === -1) {
+        const { dispatch, selectedUser, selected, allowApprove } = this.props;
+        if (allowApprove) {
             notify("<h3>You are not allowed to approve nor reject!</h3>", "info").show();
         } else {
             const status = "approved";
@@ -57,13 +60,29 @@ class CTAContainer extends Component {
     }
 }
 
+function isAllowed(Comp) {
+    return (props) => (
+        <Comp {...props}/>
+    )
+}
+
+function verifyIfAllowed({selectedUser, selected, loggedUser}) {
+    return {
+        allowed : selectedUser !== "" && selected !== null,
+        allowApprove: loggedUser !== "" && selected.approvers && selected.approvers.length > 0 && selected.approvers.indexOf(parseInt(loggedUser)) === -1,
+    }
+
+}
+
+
 function mapStateToProps(state) {
     const { selectedUser, loggedUser } = state.users;
     const { selected } = state.calendar;
+
     return {
         selectedUser,
-        loggedUser,
         selected,
+        ...verifyIfAllowed({selectedUser, selected, loggedUser}),
     }
 }
 export default connect(mapStateToProps)(CTAContainer);

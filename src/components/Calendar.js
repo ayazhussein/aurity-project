@@ -49,7 +49,7 @@ export default class Calendar extends Component {
             workWeek = timesheet.weeks.sort(function (a, b) {
                 return a.week_number - b.week_number
             });
-            console.log(workWeek);
+            // console.log(workWeek);
         }
 
         if (workWeek && weeks) {
@@ -61,7 +61,7 @@ export default class Calendar extends Component {
                 }
             }
         }
-        console.log(weeks);
+        // console.log(weeks);
         return weeks.map((week, i) => {
             return (<Week key={i}
                           week={week}
